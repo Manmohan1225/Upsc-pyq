@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>UPSC PYQ Master</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#18263d;--line:#263750;--text:#edf3fb;--muted:#9aabc2;--gold:#e7b85c;--green:#5ac69a;--red:#ed7c7c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1220,#111d31);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:22px max(18px,calc((100% - 1150px)/2));border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.brand span{color:var(--gold)}.sub{color:var(--muted);font-size:12px}
+main{max-width:1150px;margin:auto;padding:22px 18px 60px}.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:30px;margin:0 0 6px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat,.panel,.card{background:rgba(18,29,48,.94);border:1px solid var(--line);border-radius:16px;padding:16px}.stat b{font-size:25px;display:block}.stat small{color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab,button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:650}.tab.active,button.primary{background:var(--gold);color:#18202c;border-color:var(--gold)}
+button:hover,.tab:hover{filter:brightness(1.12)}button:disabled{opacity:.4;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:14px}.filters label{display:block;color:var(--muted);font-size:12px;margin:12px 0 5px}
+select,input,textarea{width:100%;background:#0c1627;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;font:inherit}
+.question{font-size:18px;line-height:1.55;margin:12px 0 16px}.option{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:#101b2e;color:var(--text);cursor:pointer}
+.option.chosen{border-color:var(--gold)}.option.correct{border-color:var(--green);background:#123126}.option.wrong{border-color:var(--red);background:#351c28}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.pill{font-size:11px;border:1px solid var(--line);border-radius:20px;padding:4px 8px;color:var(--muted)}
+.hidden{display:none!important}.notice{padding:12px;border:1px dashed #52627a;border-radius:12px;color:var(--muted);line-height:1.5}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+textarea{min-height:100px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.listitem{padding:12px 0;border-bottom:1px solid var(--line)}
+footer{max-width:1150px;margin:auto;padding:0 18px 30px;color:var(--muted);font-size:12px}
+a{color:var(--gold)}@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}h1{font-size:25px}.hero{align-items:start}}
+</style></head>
+<body>
+<header><div><div class="brand">UPSC <span>PYQ MASTER</span></div><div class="sub">Your topic-wise practice library</div></div><div class="row"><span class="pill">Local-first • Private on this device</span></div></header>
+<main>
+<section class="hero"><div><h1>Practice what you study.</h1><div class="muted">Prelims • CSAT • Mains • Essay • Chemistry Optional</div></div><div class="row"><button onclick="exportData()">Export backup</button><label class="btn" for="importFile">Import questions</label><input id="importFile" type="file" accept=".json" class="hidden" onchange="importData(event)"></div></section>
+<div class="stats"><div class="stat"><b id="total">0</b><small>Questions in library</small></div><div class="stat"><b id="attempted">0</b><small>Attempted</small></div><div class="stat"><b id="accuracy">—</b><small>MCQ accuracy</small></div><div class="stat"><b id="saved">0</b><small>Bookmarked</small></div></div>
+<div class="tabs"><button class="tab active" data-tab="practice">Practice</button><button class="tab" data-tab="library">Question library</button><button class="tab" data-tab="tests">Exam tests</button><button class="tab" data-tab="papers">Official papers</button><button class="tab" data-tab="add">Add question</button><button class="tab" data-tab="sources">Sources & coverage</button></div>
+<section id="practice" class="grid">
+<aside class="panel filters"><h3>Build a practice set</h3>
+<label>Stage</label><select id="stage"><option value="">All stages</option><option>Prelims</option><option>CSAT</option><option>Mains</option><option>Essay</option><option>Chemistry Optional</option></select>
+<label>Paper / subject</label><select id="paper"><option value="">All papers</option></select>
+<label>Topic</label><input id="topic" placeholder="e.g. Fundamental Rights">
+<label>Year</label><select id="year"><option value="">All years</option></select>
+<label>Source type</label><select id="source"><option value="">All sources</option><option>Official UPSC PYQ</option><option>Coaching material</option><option>Original practice</option></select>
+<label>Mode</label><select id="mode"><option value="">All question types</option><option>MCQ</option><option>Mains answer</option></select>
+<div class="actions"><button class="primary" onclick="startPractice()">Start practice</button><button onclick="resetFilters()">Reset</button></div>
+</aside>
+<div class="panel"><div class="row between"><div><h2 style="margin:0">Practice session</h2><div class="muted" id="sessionMeta">Choose filters and start a set.</div></div><span class="pill" id="counter">0 / 0</span></div><div id="questionArea"><div class="notice" style="margin-top:18px">Your question library is currently empty. Add questions manually or import a prepared JSON question bank. The app will never pretend that sample or unverified questions are official PYQs.</div></div></div>
+</section>
+<section id="library" class="panel hidden"><div class="row between"><h2>Question library</h2><input id="search" style="max-width:280px" placeholder="Search questions..." oninput="renderLibrary()"></div><div id="libraryList"></div></section>
+
+<section id="tests" class="panel hidden">
+<h2>UPSC exam simulator</h2>
+<div class="notice">Tests use questions in your library that match the selected paper and topic. A test is labelled a full-length simulation only when the library contains enough eligible questions. Otherwise the app clearly reports the available count rather than padding the paper with invented questions.</div>
+<div class="two" style="margin-top:14px">
+<div><label class="muted">Test pattern</label><select id="testPattern" onchange="updateTestSetup()">
+<option value="prelims">Prelims GS full test (100 MCQs • 2 hours • 200 marks)</option>
+<option value="csat">CSAT full test (80 MCQs • 2 hours • 200 marks • qualifying)</option>
+<option value="prelims-sectional">Prelims sectional test</option>
+<option value="mains-gs">Mains GS full paper (20 questions • 3 hours • 250 marks)</option>
+<option value="mains-sectional">Mains sectional test</option>
+<option value="mains-optional">Chemistry Optional full paper (3 hours • 250 marks)</option>
+<option value="essay">Essay paper (2 essays • 3 hours • 250 marks)</option>
+</select></div>
+<div><label class="muted">Paper / subject</label><select id="testPaper"><option value="">All matching papers</option></select></div>
+<div><label class="muted">Topic (for sectional tests)</label><input id="testTopic" placeholder="Leave blank for all topics"></div>
+<div><label class="muted">Question count (sectional tests)</label><input id="testCount" type="number" min="1" max="100" value="25"></div>
+</div>
+<div class="actions"><button class="primary" onclick="beginExam()">Create test</button><button onclick="showTestHistory()">Test history</button></div>
+<div id="testInfo" class="notice" style="margin-top:14px">Choose a pattern and create a test. Add verified questions to the library first.</div>
+<div id="examRunner" class="hidden" style="margin-top:18px"></div>
+<div id="testHistory" style="margin-top:16px"></div>
+</section>
+
+<section id="papers" class="panel hidden">
+<h2>Official UPSC paper library</h2>
+<div class="notice">Verified links to original UPSC PDFs and official archive pages. These links open original documents; they are not yet converted into individual searchable question records. Use archive links for years and papers not listed individually here.</div>
+<div class="row" style="margin:14px 0"><label class="muted">Filter year</label><select id="paperYear" onchange="renderPapers()" style="max-width:180px"><option value="">All years</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2001–2015 archive</option></select></div>
+<div id="officialPaperList"></div>
+<div class="actions"><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers">Open UPSC current papers page</a><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers/archives">Open UPSC archives</a></div>
+</section>
+<section id="add" class="panel hidden"><h2>Add a question</h2><div class="notice">Enter the exact question text and retain its source/year details. For official PYQs, verify against the original UPSC paper. For coaching content, record the institute/material name and page if available.</div>
+<form id="addForm" onsubmit="addQuestion(event)"><div class="two">
+<div><label class="muted">Stage</label><select id="aStage" required><option>Prelims</option><option>CSAT</option><option>Mains</option><option>Essay</option><option>Chemistry Optional</option></select></div>
+<div><label class="muted">Paper / subject</label><input id="aPaper" required placeholder="e.g. GS-II / Polity"></div>
+<div><label class="muted">Topic</label><input id="aTopic" required placeholder="e.g. Parliament"></div>
+<div><label class="muted">Year (if applicable)</label><input id="aYear" type="number" min="1900" max="2100" placeholder="e.g. 2024"></div>
+<div><label class="muted">Question type</label><select id="aType"><option>MCQ</option><option>Mains answer</option></select></div>
+<div><label class="muted">Source type</label><select id="aSource"><option>Official UPSC PYQ</option><option>Coaching material</option><option>Original practice</option></select></div></div>
+<label class="muted">Question</label><textarea id="aQuestion" required placeholder="Paste question exactly..."></textarea>
+<div id="mcqFields"><label class="muted">Options (one per line; optional)</label><textarea id="aOptions" placeholder="Option A&#10;Option B&#10;Option C&#10;Option D"></textarea><label class="muted">Correct option number (1–4; optional)</label><input id="aAnswer" type="number" min="1" max="4"><label class="muted">Explanation / answer notes</label><textarea id="aExplanation"></textarea></div>
+<label class="muted">Source reference / URL / book & page</label><input id="aReference" placeholder="UPSC paper link, institute, PDF page...">
+<div class="actions"><button class="primary" type="submit">Save question</button></div></form></section>
+<section id="sources" class="panel hidden"><h2>Source register & coverage</h2><div class="notice">Official question-paper archive links are provided below. The archive is not a complete machine-readable 25-year topic-tagged dataset by itself; older years and coaching PDFs need to be collected, extracted, verified and tagged before they can be counted as loaded questions.</div>
+<div class="listitem"><b>UPSC Previous Year Question Papers</b><br><a target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers">Open official question-paper page</a></div>
+<div class="listitem"><b>UPSC Previous Year Question Paper Archives</b><br><a target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers/archives">Open official archives</a></div>
+<div class="listitem"><b>UPSC archived exam documents</b><br><a target="_blank" href="https://cms.upsc.gov.in/archived-exam-documents/question-papers/">Open archived documents</a></div>
+<h3>Planned coverage</h3><div id="coverage"></div>
+<p class="muted">Target window: 2001–2025. Keep source labels attached to every record. Do not redistribute copyrighted coaching PDFs; use material you are authorised to access.</p></section>
+</main><footer>UPSC PYQ Master • Data is stored in this browser on this device. Export backups regularly. This app is an independent study tool and is not affiliated with UPSC.</footer>
+<script>
+const KEY='upsc_pyq_master_v1'; let db=JSON.parse(localStorage.getItem(KEY)||'[]'), session=[], pos=0, selected=null, answered={};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(db));updateStats();fillFilters()}
+function updateStats(){ $('total').textContent=db.length; let a=db.filter(q=>q.attempts>0);$('attempted').textContent=a.reduce((s,q)=>s+q.attempts,0);let mcq=db.filter(q=>q.type==='MCQ'&&q.attempts>0),right=mcq.reduce((s,q)=>s+(q.correctCount||0),0),tries=mcq.reduce((s,q)=>s+q.attempts,0);$('accuracy').textContent=tries?Math.round(right/tries*100)+'%':'—';$('saved').textContent=db.filter(q=>q.bookmarked).length}
+function fillFilters(){let papers=[...new Set(db.map(q=>q.paper))].sort(),years=[...new Set(db.map(q=>q.year).filter(Boolean))].sort((a,b)=>b-a);$('paper').innerHTML='<option value="">All papers</option>'+papers.map(x=>`<option>${esc(x)}</option>`).join('');$('year').innerHTML='<option value="">All years</option>'+years.map(x=>`<option>${x}</option>`).join('');}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));['practice','library','tests','papers','add','sources'].forEach(t=>$(t).classList.toggle('hidden',t!==b.dataset.tab));if(b.dataset.tab==='library')renderLibrary();if(b.dataset.tab==='sources')renderCoverage()});
+function filtered(){return db.filter(q=>(!$('stage').value||q.stage===$('stage').value)&&(!$('paper').value||q.paper===$('paper').value)&&(!$('topic').value||q.topic.toLowerCase().includes($('topic').value.toLowerCase()))&&(!$('year').value||String(q.year)===$('year').value)&&(!$('source').value||q.source===$('source').value)&&(!$('mode').value||q.type===$('mode').value))}
+function startPractice(){session=filtered();pos=0;answered={};$('sessionMeta').textContent=session.length?`Filtered set • ${session.length} questions`:'No questions match these filters.';renderQuestion()}
+function renderQuestion(){let q=session[pos];$('counter').textContent=session.length?`${pos+1} / ${session.length}`:'0 / 0';if(!q){$('questionArea').innerHTML='<div class="notice">No question in this position. Add or import questions to build your library.</div>';return}
+let opts=(q.options||[]).map((o,i)=>`<button class="option ${selected===i?'chosen':''}" onclick="choose(${i})">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join('');
+let result=answered[q.id];$('questionArea').innerHTML=`<div class="row"><span class="pill">${esc(q.stage)}</span><span class="pill">${esc(q.paper)}</span><span class="pill">${esc(q.topic)}</span><span class="pill">${esc(q.year||'Year not set')}</span><span class="pill">${esc(q.source)}</span></div><div class="question">${esc(q.question)}</div>${q.type==='MCQ'?opts:`<textarea id="writtenAnswer" placeholder="Write your answer here..."></textarea>`}<div id="feedback">${result!==undefined?`<div class="notice">${result?'Correct.':'Not correct.'} ${esc(q.explanation||'Review the source material and try again.')}</div>`:''}</div><div class="actions">${q.type==='MCQ'?'<button class="primary" onclick="checkAnswer()">Check answer</button>':'<button onclick="saveWritten()">Save my response</button>'}<button onclick="toggleBookmark('${q.id}')">${q.bookmarked?'★ Bookmarked':'☆ Bookmark'}</button><button onclick="prevQ()">Previous</button><button class="primary" onclick="nextQ()">Next</button></div>`;selected=null}
+function choose(i){selected=i;renderQuestion()}
+function checkAnswer(){let q=session[pos];if(selected===null)return;let ok=Number(q.answer)===selected+1;q.attempts=(q.attempts||0)+1;q.correctCount=(q.correctCount||0)+(ok?1:0);answered[q.id]=ok;save();renderQuestion()}
+function saveWritten(){let q=session[pos];q.attempts=(q.attempts||0)+1;q.lastResponse=$('writtenAnswer')?.value||'';save();$('feedback').innerHTML='<div class="notice">Response saved on this device. Self-evaluate against your notes or an authorised model answer.</div>'}
+function nextQ(){if(pos<session.length-1)pos++;renderQuestion()}function prevQ(){if(pos>0)pos--;renderQuestion()}
+function toggleBookmark(id){let q=db.find(x=>x.id===id);q.bookmarked=!q.bookmarked;save();renderQuestion()}
+function addQuestion(e){e.preventDefault();let type=$('aType').value,options=$('aOptions').value.split('\n').map(x=>x.trim()).filter(Boolean);db.push({id:crypto.randomUUID(),stage:$('aStage').value,paper:$('aPaper').value.trim(),topic:$('aTopic').value.trim(),year:$('aYear').value?Number($('aYear').value):null,type,source:$('aSource').value,question:$('aQuestion').value.trim(),options:type==='MCQ'?options:[],answer:$('aAnswer').value?Number($('aAnswer').value):null,explanation:$('aExplanation').value.trim(),reference:$('aReference').value.trim(),attempts:0,correctCount:0,bookmarked:false});save();e.target.reset();alert('Question saved.');document.querySelector('[data-tab="library"]').click()}
+function renderLibrary(){let term=$('search').value.toLowerCase();let items=db.filter(q=>(q.question+' '+q.topic+' '+q.paper).toLowerCase().includes(term));$('libraryList').innerHTML=items.length?items.map(q=>`<div class="listitem"><div class="row between"><b>${esc(q.topic)} • ${esc(q.year||'No year')}</b><span class="pill">${esc(q.source)}</span></div><div>${esc(q.question.slice(0,240))}${q.question.length>240?'…':''}</div><div class="muted">${esc(q.stage)} / ${esc(q.paper)} • ${q.attempts||0} attempts ${q.bookmarked?'• ★':''}</div><div class="actions"><button onclick="deleteQuestion('${q.id}')">Delete</button></div></div>`).join(''):'<div class="notice">No questions added yet.</div>'}
+function deleteQuestion(id){if(confirm('Delete this question?')){db=db.filter(q=>q.id!==id);save();renderLibrary()}}
+function renderCoverage(){let groups=['Prelims GS','CSAT','Mains GS-I','Mains GS-II','Mains GS-III','Mains GS-IV','Essay','Chemistry Optional'];$('coverage').innerHTML=groups.map(g=>`<div class="listitem row between"><span>${g}</span><b>${db.filter(q=>q.paper.toLowerCase().includes(g.toLowerCase())||q.stage===g).length} loaded</b></div>`).join('')}
+function resetFilters(){['stage','paper','topic','year','source','mode'].forEach(id=>$(id).value='');}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='upsc-pyq-master-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let data=JSON.parse(r.result);if(!Array.isArray(data))throw Error();let ids=new Set(db.map(q=>q.id));data.forEach(q=>{if(q.question&&q.stage&&q.paper&&!ids.has(q.id)){db.push({...q,id:q.id||crypto.randomUUID(),attempts:q.attempts||0,correctCount:q.correctCount||0});}});save();alert('Import complete.');}catch{alert('Could not read this JSON question bank.');}};r.readAsText(f);e.target.value=''}
+
+let activeExam=null, examTimer=null, examSeconds=0, examAnswers={}, examIndex=0, testHistory=JSON.parse(localStorage.getItem('upsc_test_history_v1')||'[]');
+const patterns={
+ prelims:{stage:'Prelims',count:100,minutes:120,marks:200,kind:'mcq',title:'Prelims GS full test'},
+ csat:{stage:'CSAT',count:80,minutes:120,marks:200,kind:'mcq',title:'CSAT full test'},
+ 'prelims-sectional':{stage:'Prelims',count:null,minutes:60,marks:null,kind:'mcq',title:'Prelims sectional test'},
+ 'mains-gs':{stage:'Mains',count:20,minutes:180,marks:250,kind:'written',title:'Mains GS full paper'},
+ 'mains-sectional':{stage:'Mains',count:null,minutes:60,marks:null,kind:'written',title:'Mains sectional test'},
+ 'mains-optional':{stage:'Chemistry Optional',count:20,minutes:180,marks:250,kind:'written',title:'Chemistry Optional full paper'},
+ essay:{stage:'Essay',count:2,minutes:180,marks:250,kind:'written',title:'Essay paper'}
+};
+function updateTestSetup(){
+ const p=$('testPattern').value, cfg=patterns[p], papers=[...new Set(db.filter(q=>q.stage===cfg.stage).map(q=>q.paper))].sort();
+ $('testPaper').innerHTML='<option value="">All matching papers</option>'+papers.map(x=>`<option>${esc(x)}</option>`).join('');
+ $('testInfo').textContent=`${cfg.title}: ${cfg.count||'custom'} questions • ${cfg.minutes} minutes${cfg.marks?' • '+cfg.marks+' marks':''}. The test is assembled from your saved question bank.`;
+}
+function beginExam(){
+ clearInterval(examTimer);
+ const key=$('testPattern').value,cfg=patterns[key],topic=$('testTopic').value.trim().toLowerCase(),paper=$('testPaper').value;
+ let eligible=db.filter(q=>q.stage===cfg.stage&&(!paper||q.paper===paper)&&(!topic||q.topic.toLowerCase().includes(topic))&&q.type===(cfg.kind==='mcq'?'MCQ':'Mains answer'));
+ if(key==='essay') eligible=db.filter(q=>q.stage==='Essay'&&q.type==='Mains answer'&&(!topic||q.topic.toLowerCase().includes(topic)));
+ let requested=cfg.count||Math.max(1,Math.min(100,Number($('testCount').value)||25));
+ if(!cfg.count) requested=Math.min(requested,eligible.length);
+ if(eligible.length===0){$('testInfo').innerHTML='No matching questions found. Add questions in this paper/section first.';return}
+ let picked=[...eligible].sort(()=>Math.random()-.5).slice(0,requested);
+ activeExam={key,cfg,questions:picked,started:new Date().toISOString(),full:picked.length===cfg.count};
+ examAnswers={};examIndex=0;examSeconds=cfg.minutes*60;
+ $('testInfo').innerHTML=`<b>${esc(cfg.title)}</b><br>Loaded ${picked.length} of ${cfg.count||requested} target questions. ${activeExam.full?'Question count matches the selected pattern.':'<b>Practice set only:</b> not enough matching questions for a complete exam-pattern paper.'}`;
+ $('testHistory').innerHTML='';
+ $('examRunner').classList.remove('hidden');renderExam();
+ examTimer=setInterval(()=>{examSeconds--;let t=$('examClock');if(t)t.textContent=formatTime(examSeconds);if(examSeconds<=0){clearInterval(examTimer);submitExam(true)}},1000);
+}
+function formatTime(s){s=Math.max(0,s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function renderExam(){
+ if(!activeExam)return;
+ const q=activeExam.questions[examIndex],cfg=activeExam.cfg;
+ const nav=activeExam.questions.map((x,i)=>`<button class="${i===examIndex?'primary':''}" onclick="examIndex=${i};renderExam()">${i+1}${examAnswers[x.id]?' ✓':''}</button>`).join('');
+ let answer=examAnswers[q.id]||'';
+ $('examRunner').innerHTML=`<div class="row between"><div><b>${esc(cfg.title)}</b><div class="muted">${examIndex+1} of ${activeExam.questions.length} • ${esc(q.paper)} • ${esc(q.topic)}</div></div><div class="pill">Time left: <b id="examClock">${formatTime(examSeconds)}</b></div></div>
+ <div class="question">${esc(q.question)}</div>
+ ${cfg.kind==='mcq'?(q.options||[]).map((o,i)=>`<button class="option ${Number(answer)===i+1?'chosen':''}" onclick="examAnswers['${q.id}']='${i+1}';renderExam()">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join(''):`<label class="muted">Write your answer${q.wordLimit?' • '+q.wordLimit+' words':''}</label><textarea id="examWritten" oninput="examAnswers['${q.id}']=this.value" placeholder="Write your answer...">${esc(answer)}</textarea><div class="muted">${cfg.key==='essay'?'Essay practice: develop an introduction, structured arguments, examples and conclusion.':''}</div>`}
+ <div class="actions"><button onclick="examIndex=Math.max(0,examIndex-1);renderExam()" ${examIndex===0?'disabled':''}>Previous</button><button onclick="examIndex=Math.min(activeExam.questions.length-1,examIndex+1);renderExam()" ${examIndex===activeExam.questions.length-1?'disabled':''}>Next</button><button class="primary" onclick="submitExam(false)">Submit test</button></div>
+ <div class="row" style="margin-top:14px;gap:6px">${nav}</div>`;
+}
+function submitExam(auto){
+ if(!activeExam)return;clearInterval(examTimer);
+ const ex=activeExam,cfg=ex.cfg;
+ let attempted=0,correct=0,score=0;
+ ex.questions.forEach(q=>{let a=examAnswers[q.id];if(a!==undefined&&a!==''){attempted++;if(cfg.kind==='mcq'){if(Number(a)===Number(q.answer)){correct++;score+=2}else score-=2/3;}}});
+ let record={title:cfg.title,date:new Date().toLocaleString(),total:ex.questions.length,attempted,correct,score:cfg.kind==='mcq'?Math.round(score*100)/100:null,full:ex.full};
+ testHistory.unshift(record);localStorage.setItem('upsc_test_history_v1',JSON.stringify(testHistory.slice(0,100)));
+ ex.questions.forEach(q=>{if(examAnswers[q.id]!==undefined&&examAnswers[q.id]!==''){q.attempts=(q.attempts||0)+1;if(cfg.kind==='mcq'&&Number(examAnswers[q.id])===Number(q.answer))q.correctCount=(q.correctCount||0)+1;}});
+ save();
+ $('examRunner').innerHTML=`<h3>Test submitted ${auto?'(time expired)':''}</h3><div class="stats"><div class="stat"><b>${attempted}/${ex.questions.length}</b><small>Attempted</small></div><div class="stat"><b>${cfg.kind==='mcq'?correct:'—'}</b><small>Correct MCQs</small></div><div class="stat"><b>${cfg.kind==='mcq'?score.toFixed(2):'Self-evaluate'}</b><small>${cfg.kind==='mcq'?'Score / '+cfg.marks+' (negative marking applied)':'Written answers'}</small></div><div class="stat"><b>${ex.full?'Yes':'No'}</b><small>Full pattern count reached</small></div></div><div class="notice">${cfg.kind==='written'?'Mains and Essay answers are saved as responses; evaluate them against a trusted marking rubric or model answer.':'Prelims scoring uses +2 for correct and −0.67 for incorrect. Unattempted questions receive zero.'} ${cfg.key==='csat'?'CSAT qualifying threshold: 33% (66/200).':''}</div><div class="actions"><button onclick="showTestHistory()">View test history</button><button class="primary" onclick="beginExam()">Generate another test</button></div>`;
+ activeExam=null;
+}
+function showTestHistory(){
+ $('testHistory').innerHTML='<h3>Recent tests</h3>'+(testHistory.length?testHistory.slice(0,20).map(r=>`<div class="listitem"><b>${esc(r.title)}</b><div class="muted">${esc(r.date)} • ${r.attempted}/${r.total} attempted • ${r.score===null?'Written response':r.score+' marks'} • ${r.full?'Full question count':'Partial practice set'}</div></div>`).join(''):'<div class="muted">No completed tests yet.</div>');
+}
+
+
+const officialPapers=[
+{y:'2025',group:'Prelims',name:'Prelims GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-I-26052025.pdf'},
+{y:'2025',group:'Prelims',name:'Prelims CSAT / GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-II-26052025.pdf'},
+{y:'2025',group:'Mains GS',name:'Mains GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER%20I-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Mains GS',name:'Mains GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER-II-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Mains GS',name:'Mains GS Paper III',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER-III-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Mains GS',name:'Mains GS Paper IV',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER-IV-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Essay',name:'Mains Essay',url:'https://www.upsc.gov.in/sites/default/files/ESSAY-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Chemistry Optional',name:'Chemistry Optional Paper I',url:'https://www.upsc.gov.in/sites/default/files/CHEMISTRY-PAPER-I-QP-CSM-25-010925.pdf'},
+{y:'2025',group:'Chemistry Optional',name:'Chemistry Optional Paper II',url:'https://www.upsc.gov.in/sites/default/files/CHEMISTRY-PAPER-II-QP-CSM-25-010925.pdf'},
+{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-I-031024.pdf'},
+{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-II-031024.pdf'},
+{y:'2024',group:'Mains GS',name:'Mains GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_II_03102024.pdf'},
+{y:'2024',group:'Mains GS',name:'Mains GS Paper III',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_III_03102024.pdf'},
+{y:'2024',group:'Mains GS',name:'Mains GS Paper IV',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_IV_03102024.pdf'},
+{y:'2024',group:'Essay',name:'Mains Essay',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_ESSAY_03102024.pdf'},
+...['2023','2022','2021','2020','2019','2018','2017','2016'].map(y=>({y,group:'All Civil Services papers',name:`Prelims, Mains GS, Essay and optional papers — ${y} archive`,url:'https://www.upsc.gov.in/examinations/previous-question-papers/archives'})),
+{y:'2001–2015 archive',group:'Older papers',name:'Older Civil Services question papers (check archive availability)',url:'https://cms.upsc.gov.in/archived-exam-documents/question-papers/'}
+];
+function renderPapers(){let y=$('paperYear')?.value||'',rows=officialPapers.filter(p=>!y||p.y===y);$('officialPaperList').innerHTML=rows.map(p=>`<div class="listitem row between"><div><b>${esc(p.y)} • ${esc(p.name)}</b><div class="muted">${esc(p.group)} • Official UPSC source</div></div><a target="_blank" rel="noopener" href="${p.url}">Open paper ↗</a></div>`).join('')}
+
+updateStats();fillFilters();updateTestSetup();renderPapers();
+</script></body></html>
