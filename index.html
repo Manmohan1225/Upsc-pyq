@@ -69,10 +69,10 @@ a{color:var(--gold)}@media(max-width:760px){.stats{grid-template-columns:repeat(
 
 <section id="papers" class="panel hidden">
 <h2>Official UPSC paper library</h2>
-<div class="notice">Verified links to original UPSC PDFs and official archive pages. These links open original documents; they are not yet converted into individual searchable question records. Use archive links for years and papers not listed individually here.</div>
+<div class="notice">Direct PDF links below are taken from the official UPSC question-paper listing for the years shown. For 2023 and earlier, use the official UPSC searchable paper archive. PDFs open from UPSC; they are not yet converted into individual searchable question records.</div>
 <div class="row" style="margin:14px 0"><label class="muted">Filter year</label><select id="paperYear" onchange="renderPapers()" style="max-width:180px"><option value="">All years</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2001–2015 archive</option></select></div>
 <div id="officialPaperList"></div>
-<div class="actions"><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers">Open UPSC current papers page</a><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers/archives">Open UPSC archives</a></div>
+<div class="actions"><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers">Open official UPSC papers & archive</a><a class="btn" target="_blank" href="https://www.upsc.gov.in/examinations/previous-question-papers/archives">Open UPSC archives</a></div>
 </section>
 <section id="add" class="panel hidden"><h2>Add a question</h2><div class="notice">Enter the exact question text and retain its source/year details. For official PYQs, verify against the original UPSC paper. For coaching content, record the institute/material name and page if available.</div>
 <form id="addForm" onsubmit="addQuestion(event)"><div class="two">
@@ -180,8 +180,8 @@ function showTestHistory(){
 
 
 const officialPapers=[
-{y:'2025',group:'Prelims',name:'Prelims GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-I-26052025.pdf'},
-{y:'2025',group:'Prelims',name:'Prelims CSAT / GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-II-26052025.pdf'},
+{y:'2025',group:'Prelims',name:'Civil Services Prelims — GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-I-26052025.pdf'},
+{y:'2025',group:'Prelims',name:'Civil Services Prelims — GS Paper II (CSAT)',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-25-GENERAL-STUDIES-PAPER-II-26052025.pdf'},
 {y:'2025',group:'Mains GS',name:'Mains GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER%20I-QP-CSM-25-010925.pdf'},
 {y:'2025',group:'Mains GS',name:'Mains GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER-II-QP-CSM-25-010925.pdf'},
 {y:'2025',group:'Mains GS',name:'Mains GS Paper III',url:'https://www.upsc.gov.in/sites/default/files/GENERAL-STUDIES-PAPER-III-QP-CSM-25-010925.pdf'},
@@ -189,14 +189,16 @@ const officialPapers=[
 {y:'2025',group:'Essay',name:'Mains Essay',url:'https://www.upsc.gov.in/sites/default/files/ESSAY-QP-CSM-25-010925.pdf'},
 {y:'2025',group:'Chemistry Optional',name:'Chemistry Optional Paper I',url:'https://www.upsc.gov.in/sites/default/files/CHEMISTRY-PAPER-I-QP-CSM-25-010925.pdf'},
 {y:'2025',group:'Chemistry Optional',name:'Chemistry Optional Paper II',url:'https://www.upsc.gov.in/sites/default/files/CHEMISTRY-PAPER-II-QP-CSM-25-010925.pdf'},
-{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-I-031024.pdf'},
-{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-II-031024.pdf'},
+{y:'2024',group:'Prelims',name:'Civil Services Prelims — GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-24-GENERAL-STUDIES-PAPER-I-180624.pdf'},
+{y:'2024',group:'Prelims',name:'Civil Services Prelims — GS Paper II (CSAT)',url:'https://www.upsc.gov.in/sites/default/files/QP-CSP-24-GENERAL-STUDIES-PAPER-II-180624.pdf'},
+{y:'2024',group:'Mains GS',name:'Mains GS Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_I_03102024.pdf'},
 {y:'2024',group:'Mains GS',name:'Mains GS Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_II_03102024.pdf'},
 {y:'2024',group:'Mains GS',name:'Mains GS Paper III',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_III_03102024.pdf'},
 {y:'2024',group:'Mains GS',name:'Mains GS Paper IV',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_GenStud_IV_03102024.pdf'},
 {y:'2024',group:'Essay',name:'Mains Essay',url:'https://www.upsc.gov.in/sites/default/files/QP_CSM_2024_ESSAY_03102024.pdf'},
-...['2023','2022','2021','2020','2019','2018','2017','2016'].map(y=>({y,group:'All Civil Services papers',name:`Prelims, Mains GS, Essay and optional papers — ${y} archive`,url:'https://www.upsc.gov.in/examinations/previous-question-papers/archives'})),
-{y:'2001–2015 archive',group:'Older papers',name:'Older Civil Services question papers (check archive availability)',url:'https://cms.upsc.gov.in/archived-exam-documents/question-papers/'}
+{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper I',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-I-031024.pdf'},
+{y:'2024',group:'Chemistry Optional',name:'Chemistry Optional Paper II',url:'https://www.upsc.gov.in/sites/default/files/QP-CSM-24-CHEMISTRY-PAPER-II-031024.pdf'},
+...['2023','2022','2021','2020','2019','2018','2017','2016','2001–2015 archive'].map(y=>({y,group:'Official UPSC archive',name:`Civil Services Prelims and Mains papers — ${y}`,url:'https://www.upsc.gov.in/examinations/previous-question-papers'}))
 ];
 function renderPapers(){let y=$('paperYear')?.value||'',rows=officialPapers.filter(p=>!y||p.y===y);$('officialPaperList').innerHTML=rows.map(p=>`<div class="listitem row between"><div><b>${esc(p.y)} • ${esc(p.name)}</b><div class="muted">${esc(p.group)} • Official UPSC source</div></div><a target="_blank" rel="noopener" href="${p.url}">Open paper ↗</a></div>`).join('')}
 
